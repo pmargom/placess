@@ -1,4 +1,3 @@
 class Apis {
-  static String FOURSQUARE_API_KEY =
-      'fsq3xiOLMHEH8TZEeJY/QzDPALa5L/X8DrkLSnVyCDe2MIA=';
+  static String FOURSQUARE_API_KEY = 'YOUR-GOOGLE-MAPS_KEY';
 }
