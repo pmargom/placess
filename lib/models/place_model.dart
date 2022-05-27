@@ -8,6 +8,9 @@ Place placeFromJson(String str) => Place.fromJson(json.decode(str));
 
 String placeToJson(Place data) => json.encode(data.toJson());
 
+List<Place> placesFromJson(dynamic jsonList) =>
+    List.from(jsonList).map((place) => Place.fromJson(place)).toList();
+
 class Place {
   Place({
     required this.fsqId,
@@ -70,12 +73,12 @@ class Category {
 
   int id;
   String name;
-  Icon icon;
+  PlaceIcon icon;
 
   factory Category.fromJson(Map<String, dynamic> json) => Category(
         id: json["id"],
         name: json["name"],
-        icon: Icon.fromJson(json["icon"]),
+        icon: PlaceIcon.fromJson(json["icon"]),
       );
 
   Map<String, dynamic> toJson() => {
@@ -85,8 +88,8 @@ class Category {
       };
 }
 
-class Icon {
-  Icon({
+class PlaceIcon {
+  PlaceIcon({
     required this.prefix,
     required this.suffix,
   });
@@ -94,7 +97,7 @@ class Icon {
   String prefix;
   String suffix;
 
-  factory Icon.fromJson(Map<String, dynamic> json) => Icon(
+  factory PlaceIcon.fromJson(Map<String, dynamic> json) => PlaceIcon(
         prefix: json["prefix"],
         suffix: json["suffix"],
       );
@@ -143,24 +146,24 @@ class Main {
 
 class Location {
   Location({
-    required this.address,
-    required this.adminRegion,
-    required this.country,
-    required this.crossStreet,
-    required this.formattedAddress,
-    required this.locality,
-    required this.postcode,
-    required this.region,
+    this.address,
+    this.adminRegion,
+    this.country,
+    this.crossStreet,
+    this.formattedAddress,
+    this.locality,
+    this.postcode,
+    this.region,
   });
 
-  String address;
-  String adminRegion;
-  String country;
-  String crossStreet;
-  String formattedAddress;
-  String locality;
-  String postcode;
-  String region;
+  String? address;
+  String? adminRegion;
+  String? country;
+  String? crossStreet;
+  String? formattedAddress;
+  String? locality;
+  String? postcode;
+  String? region;
 
   factory Location.fromJson(Map<String, dynamic> json) => Location(
         address: json["address"],
