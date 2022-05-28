@@ -47,7 +47,7 @@ class Place {
         location: Location.fromJson(json["location"]),
         name: json["name"],
         relatedPlaces: RelatedPlaces.fromJson(json["related_places"]),
-        timezone: json["timezone"],
+        timezone: json["timezone"] ?? '',
       );
 
   Map<String, dynamic> toJson() => {

@@ -1,6 +1,6 @@
 class ApiResponseModel {
   String? error;
-  var results;
+  dynamic results;
 
   ApiResponseModel({
     this.results,

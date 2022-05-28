@@ -1,3 +1,4 @@
+// ignore: depend_on_referenced_packages
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
@@ -11,13 +12,13 @@ class PlacesCubit extends Cubit<PlacesState> {
     // search();
   }
 
-  Future<void> search() async {
+  Future<void> search({String criteria = ''}) async {
     emit(PlacesLoading());
     try {
-      final List<Place> places = await PlacesService.search();
+      final List<Place> places = await PlacesService.search(criteria);
       emit(PlacesSuccess(places: places));
     } catch (e) {
-      emit(PlacesError(message: e.toString()));
+      emit(const PlacesError(message: 'Error during search'));
     }
   }
 }
