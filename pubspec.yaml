@@ -17,6 +17,7 @@ dependencies:
   flutter_bloc: ^8.0.1
   equatable: ^2.0.3
   transparent_image: ^2.0.0
+  location: ^4.2.0
 
 dev_dependencies:
   flutter_test:

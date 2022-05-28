@@ -1,12 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:places_app/widgets/criteria_search.dart';
-import 'package:places_app/widgets/error_results.dart';
-import 'package:places_app/widgets/initial_results.dart';
-import 'package:places_app/widgets/loading.dart';
 
 import '../cubit/places_cubit.dart';
 import '../models/place_model.dart';
+import '../shared/location_service.dart';
+import '../widgets/criteria_search.dart';
+import '../widgets/error_results.dart';
+import '../widgets/initial_results.dart';
+import '../widgets/loading.dart';
 import '../widgets/results_as_list.dart';
 import 'map_screen.dart';
 
@@ -20,10 +23,21 @@ class HomesScreen extends StatefulWidget {
 }
 
 class _HomesScreenState extends State<HomesScreen> {
+  late StreamController<bool> _toggleView;
+
   @override
   void initState() {
     super.initState();
-    // WidgetsBinding.instance.addPostFrameCallback((_) => _refresh());
+    _toggleView = StreamController<bool>.broadcast();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await LocationService.init();
+    });
+  }
+
+  @override
+  void dispose() {
+    _toggleView.close();
+    super.dispose();
   }
 
   @override
@@ -41,15 +55,25 @@ class _HomesScreenState extends State<HomesScreen> {
         elevation: 0,
       ),
       body: _buildResults(),
-      floatingActionButton: FloatingActionButton(
-        // onPressed: _showMap,
-        onPressed: _refresh,
-        tooltip: 'Show Map',
-        child: const Icon(
-          Icons.add,
-        ),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      floatingActionButton:
+          _showFloatingButton(), // This trailing comma makes auto-formatting nicer for build methods.
     );
+  }
+
+  Widget _showFloatingButton() {
+    return StreamBuilder<bool>(
+        stream: _toggleView.stream,
+        builder: (context, snapshot) {
+          final newValue = snapshot.data ?? false;
+          return Visibility(
+            visible: newValue,
+            child: FloatingActionButton(
+              onPressed: _showMap,
+              tooltip: 'Show Map',
+              child: const Icon(Icons.map),
+            ),
+          );
+        });
   }
 
   Widget _buildResults() {
@@ -64,6 +88,7 @@ class _HomesScreenState extends State<HomesScreen> {
         }
 
         if (state is PlacesSuccess) {
+          _toggleView.sink.add(state.places.isNotEmpty);
           if (state.places.isEmpty) {
             return const ErrorResults(message: 'No results');
           }
@@ -87,8 +112,8 @@ class _HomesScreenState extends State<HomesScreen> {
     Navigator.pushNamed(context, MapScreen.id);
   }
 
-  void _refresh() {
-    final placeCubit = BlocProvider.of<PlacesCubit>(context);
-    placeCubit.search();
-  }
+  // void _refresh() {
+  //   final placeCubit = BlocProvider.of<PlacesCubit>(context);
+  //   placeCubit.search();
+  // }
 }

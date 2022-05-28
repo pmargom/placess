@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:places_app/shared/location_service.dart';
 
 import 'bloc_dependency.dart';
 import 'screens/home_screen.dart';
 import 'screens/map_screen.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // await LocationService.init();
   runApp(const MyApp());
 }
 
