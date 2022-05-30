@@ -1,16 +1,14 @@
 # places_app
 
-A new Flutter project.
+A new Flutter project. Places App uses Fouresquare Places & Photo APIs.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Install Flutter SDK: (https://docs.flutter.dev/get-started/install)
+- Get a Fourescare Places API key (https://foursquare.com/)
+- Get a Google API key (https://developers.google.com/maps/documentation/maps-static/get-api-key)
+- Clone the repo.
+- Indicate your Google Maps API key in file: ios/Runner/AppDelegate.swift.
+- Indicate your Foursquare API key in file: lib/Constants/apis.dart.
+- Execute a iOS simulator (or a iOS device).
+- Open a terminal and run: **flutter run**
