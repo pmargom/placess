@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:places_app/utils.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 import '../models/place_model.dart';
+import '../screens/place_details_screen.dart';
+import '../utils.dart';
 
 class ResultsAsList extends StatelessWidget {
   final List<Place> places;
@@ -24,7 +25,8 @@ class ResultsAsList extends StatelessWidget {
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10),
-              color: const Color.fromARGB(255, 177, 221, 126),
+              // color: const Color.fromARGB(255, 177, 221, 126),
+              border: Border.all(color: Colors.blueGrey, width: 1),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -33,11 +35,12 @@ class ResultsAsList extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(
+                    Container(
                       width: 48,
+                      color: Colors.blueGrey,
                       child: FadeInImage.memoryNetwork(
                         placeholder: kTransparentImage,
-                        image: _preparePlaceIcon(place),
+                        image: preparePlaceIcon(place),
                         fit: BoxFit.cover,
                       ),
                     ),
@@ -60,7 +63,10 @@ class ResultsAsList extends StatelessWidget {
                     ),
                     IconButton(
                       icon: const Icon(Icons.remove_red_eye_outlined),
-                      onPressed: () {},
+                      onPressed: () => _showDetails(
+                        context,
+                        place,
+                      ),
                     )
                   ],
                 ),
@@ -75,7 +81,7 @@ class ResultsAsList extends StatelessWidget {
                       textAlign: TextAlign.center,
                       style: const TextStyle(fontSize: 14),
                     ),
-                    const SizedBox(width: 30),
+                    const SizedBox(width: 22),
                     Expanded(
                       child: Text(
                         place.location.formattedAddress!,
@@ -92,6 +98,14 @@ class ResultsAsList extends StatelessWidget {
     );
   }
 
-  String _preparePlaceIcon(Place place) =>
-      '${place.categories.first.icon.prefix}64${place.categories.first.icon.suffix}';
+  void _showDetails(BuildContext context, Place place) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => PlaceDetailsScreen(
+          place: place,
+        ),
+      ),
+    );
+  }
 }

@@ -9,9 +9,7 @@ import '../services/places_service.dart';
 part 'places_state.dart';
 
 class PlacesCubit extends Cubit<PlacesState> {
-  PlacesCubit() : super(PlacesInitial()) {
-    // search();
-  }
+  PlacesCubit() : super(PlacesInitial());
 
   Future<void> search(LocationData locationData, {String criteria = ''}) async {
     emit(PlacesLoading());

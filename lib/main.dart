@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:places_app/screens/place_details_screen.dart';
 import 'package:places_app/shared/location_service.dart';
 
 import 'bloc_dependency.dart';
@@ -28,6 +29,7 @@ class MyApp extends StatelessWidget {
         routes: {
           HomesScreen.id: (context) => const HomesScreen(),
           MapScreen.id: (context) => const MapScreen(),
+          PlaceDetailsScreen.id: ((context) => const PlaceDetailsScreen())
         },
         debugShowCheckedModeBanner: false,
       ),

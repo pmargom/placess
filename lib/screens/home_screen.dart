@@ -2,6 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:places_app/cubit/custom_map_cubit.dart';
+import 'package:places_app/shared/location_service.dart';
+import 'package:places_app/utils.dart';
 
 import '../cubit/places_cubit.dart';
 import '../models/place_model.dart';
@@ -22,15 +26,14 @@ class HomesScreen extends StatefulWidget {
 }
 
 class _HomesScreenState extends State<HomesScreen> {
-  late StreamController<bool> _toggleView;
+  late StreamController<List<Place>> _toggleView;
+  // late List<Place> _places;
 
   @override
   void initState() {
     super.initState();
-    _toggleView = StreamController<bool>.broadcast();
-    // WidgetsBinding.instance.addPostFrameCallback((_) async {
-    //   await LocationService.init();
-    // });
+    _toggleView = StreamController<List<Place>>.broadcast();
+    // _places = [];
   }
 
   @override
@@ -60,19 +63,20 @@ class _HomesScreenState extends State<HomesScreen> {
   }
 
   Widget _showFloatingButton() {
-    return StreamBuilder<bool>(
-        stream: _toggleView.stream,
-        builder: (context, snapshot) {
-          final newValue = snapshot.data ?? false;
-          return Visibility(
-            visible: newValue,
-            child: FloatingActionButton(
-              onPressed: _showMap,
-              tooltip: 'Show Map',
-              child: const Icon(Icons.map),
-            ),
-          );
-        });
+    return StreamBuilder<List<Place>>(
+      stream: _toggleView.stream,
+      builder: (context, snapshot) {
+        final places = snapshot.data ?? [];
+        return Visibility(
+          visible: places.isNotEmpty,
+          child: FloatingActionButton(
+            onPressed: () => _showMap(places),
+            tooltip: 'Show Map',
+            child: const Icon(Icons.map),
+          ),
+        );
+      },
+    );
   }
 
   Widget _buildResults() {
@@ -87,10 +91,12 @@ class _HomesScreenState extends State<HomesScreen> {
         }
 
         if (state is PlacesSuccess) {
-          _toggleView.sink.add(state.places.isNotEmpty);
+          _toggleView.sink.add(state.places);
           if (state.places.isEmpty) {
             return const ErrorResults(message: 'No results');
           }
+
+          // _places = state.places;
           return _showData(state.places);
         }
 
@@ -107,7 +113,18 @@ class _HomesScreenState extends State<HomesScreen> {
     return ResultsAsList(places: places);
   }
 
-  void _showMap() {
+  void _showMap(List<Place> places) {
+    final LatLng coordinates = LatLng(
+      LocationService.locationData.latitude!,
+      LocationService.locationData.longitude!,
+    );
+
+    final initialPosition = initCameraPosition(coordinates, 10);
+    final CustomMapCubit customMapCubit =
+        BlocProvider.of<CustomMapCubit>(context);
+
+    customMapCubit.init(initialPosition, places);
+
     Navigator.pushNamed(context, MapScreen.id);
   }
 
