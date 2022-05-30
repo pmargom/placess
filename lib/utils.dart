@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:places_app/models/place_photo_model.dart';
 import 'package:places_app/screens/place_details_screen.dart';
 
 import 'models/place_model.dart';
@@ -18,6 +19,9 @@ String formatDistance(int distance) {
 
 String preparePlaceIcon(Place place) =>
     '${place.categories.first.icon.prefix}64${place.categories.first.icon.suffix}';
+
+String preparePlacePhoto(PlacePhoto photo) =>
+    '${photo.prefix}500x650${photo.suffix}';
 
 CameraPosition initCameraPosition(LatLng coordinates, double zoom) {
   return CameraPosition(

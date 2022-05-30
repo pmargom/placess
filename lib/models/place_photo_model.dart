@@ -4,11 +4,12 @@
 
 import 'dart:convert';
 
-List<PlacePhoto> placePhotoFromJson(String str) =>
-    List<PlacePhoto>.from(json.decode(str).map((x) => PlacePhoto.fromJson(x)));
-
 String placePhotoToJson(List<PlacePhoto> data) =>
     json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+
+List<PlacePhoto> placePhotoFromJson(dynamic jsonList) => List.from(jsonList)
+    .map((placePhoto) => PlacePhoto.fromJson(placePhoto))
+    .toList();
 
 class PlacePhoto {
   PlacePhoto({

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:transparent_image/transparent_image.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:places_app/models/place_photo_model.dart';
 
+import '../cubit/place_photo_cubit.dart';
 import '../models/place_model.dart';
 import '../utils.dart';
 import '../widgets/map_widget.dart';
+import '../widgets/picture_widget.dart';
 
 class PlaceDetailsScreen extends StatefulWidget {
   static String id = 'placeDetails';
@@ -25,6 +28,20 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
   void initState() {
     super.initState();
     _place = widget.place;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final String fsqId = _place?.fsqId ?? '';
+      if (fsqId.isNotEmpty) {
+        await _getPhotos(fsqId);
+      }
+    });
+  }
+
+  Future<void> _getPhotos(String fsqId) async {
+    final PlacePhotoCubit placePhotoCubit =
+        BlocProvider.of<PlacePhotoCubit>(context);
+
+    await placePhotoCubit.getPhotos(fsqId);
   }
 
   @override
@@ -36,11 +53,11 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
       ),
       body: Column(
         children: [
-          _showMap(),
+          // _showMap(),
           _createTopDetailsSection(),
           _createAddress(),
           _createDIstance(),
-          _createPicturesSection(),
+          Expanded(child: _createPicturesSection()),
         ],
       ),
     );
@@ -87,25 +104,27 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '${_place?.name}',
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w600,
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${_place?.name}',
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                '${_place?.categories.first.name}',
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
+                const SizedBox(height: 6),
+                Text(
+                  '${_place?.categories.first.name}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           IconButton(
             icon: const Icon(Icons.favorite_outline),
@@ -117,58 +136,51 @@ class _PlaceDetailsScreenState extends State<PlaceDetailsScreen> {
   }
 
   Widget _showMap() {
-    return Container(
+    return SizedBox(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height * 0.3,
-      color: Colors.amber,
       child: MapWidget(
         places: [widget.place!],
-        zoom: 12,
+        zoom: 17,
         onTapOnInfoWindowActivated: false,
       ),
     );
   }
 
   Widget _createPicturesSection() {
-    return Container(
-      margin: const EdgeInsets.only(top: 20, left: 16, right: 8),
-      width: MediaQuery.of(context).size.width,
-      child: Wrap(
-        spacing: 10,
-        runSpacing: 10,
-        children: const [
-          PictureWidget(),
-          PictureWidget(),
-          PictureWidget(),
-          PictureWidget(),
-          PictureWidget(),
-          PictureWidget(),
-        ],
-      ),
-    );
-  }
-}
+    return BlocBuilder<PlacePhotoCubit, PlacePhotoState>(
+        builder: (context, state) {
+      if (state is PlacePhotoLoading) {
+        return const Center(child: CircularProgressIndicator());
+      }
 
-class PictureWidget extends StatelessWidget {
-  const PictureWidget({
-    Key? key,
-  }) : super(key: key);
+      if (state is PlacePhotoSuccess) {
+        final photos = state.placePhotos;
+        if (photos.isEmpty) {
+          return Container();
+        }
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(5),
-      width: MediaQuery.of(context).size.width / 5,
-      height: 80,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: Colors.blueGrey, width: 1)),
-      child: FadeInImage.memoryNetwork(
-        placeholder: kTransparentImage,
-        image:
-            'https://imgcy.trivago.com/c_lfill,d_dummy.jpeg,e_sharpen:60,f_auto,h_450,q_auto,w_450/itemimages/51/47/5147630_v15.jpeg',
-        fit: BoxFit.cover,
-      ),
-    );
+        return Container(
+          margin: const EdgeInsets.only(top: 20, left: 16, right: 8),
+          width: MediaQuery.of(context).size.width,
+          child: Wrap(
+            spacing: 10,
+            runSpacing: 10,
+            children: photos
+                .map(
+                  (PlacePhoto photo) => Hero(
+                    tag: 'location-img-${photo.id}',
+                    child: PictureWidget(
+                      photo: preparePlacePhoto(photo),
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+        );
+      }
+
+      return Container();
+    });
   }
 }
