@@ -8,7 +8,7 @@ import 'screens/map_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await LocationService.init();
+  await LocationService.init();
   runApp(const MyApp());
 }
 

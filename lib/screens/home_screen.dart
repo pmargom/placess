@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../cubit/places_cubit.dart';
 import '../models/place_model.dart';
-import '../shared/location_service.dart';
 import '../widgets/criteria_search.dart';
 import '../widgets/error_results.dart';
 import '../widgets/initial_results.dart';
@@ -29,9 +28,9 @@ class _HomesScreenState extends State<HomesScreen> {
   void initState() {
     super.initState();
     _toggleView = StreamController<bool>.broadcast();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await LocationService.init();
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((_) async {
+    //   await LocationService.init();
+    // });
   }
 
   @override
