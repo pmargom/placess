@@ -27,13 +27,11 @@ class HomesScreen extends StatefulWidget {
 
 class _HomesScreenState extends State<HomesScreen> {
   late StreamController<List<Place>> _toggleView;
-  // late List<Place> _places;
 
   @override
   void initState() {
     super.initState();
     _toggleView = StreamController<List<Place>>.broadcast();
-    // _places = [];
   }
 
   @override
@@ -96,7 +94,6 @@ class _HomesScreenState extends State<HomesScreen> {
             return const ErrorResults(message: 'No results');
           }
 
-          // _places = state.places;
           return _showData(state.places);
         }
 
@@ -127,9 +124,4 @@ class _HomesScreenState extends State<HomesScreen> {
 
     Navigator.pushNamed(context, MapScreen.id);
   }
-
-  // void _refresh() {
-  //   final placeCubit = BlocProvider.of<PlacesCubit>(context);
-  //   placeCubit.search();
-  // }
 }

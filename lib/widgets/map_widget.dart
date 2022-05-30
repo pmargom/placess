@@ -31,7 +31,8 @@ class _MapWidgetState extends State<MapWidget> {
     super.initState();
     _mapController = Completer();
     _markers = {};
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await Future.delayed(const Duration(milliseconds: 250));
       setState(() {
         _markers = buildMarkers(context, widget.places,
             onTapActivated: widget.onTapOnInfoWindowActivated);
@@ -41,6 +42,10 @@ class _MapWidgetState extends State<MapWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (_markers.isEmpty) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return GoogleMap(
       zoomGesturesEnabled: true,
       mapType: MapType.normal,

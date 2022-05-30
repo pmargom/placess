@@ -18,6 +18,8 @@ dependencies:
   equatable: ^2.0.3
   transparent_image: ^2.0.0
   location: ^4.2.0
+  shared_preferences: ^2.0.15
+  url_launcher: ^6.1.2
 
 dev_dependencies:
   flutter_test:

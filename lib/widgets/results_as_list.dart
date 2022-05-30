@@ -35,15 +35,16 @@ class ResultsAsList extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      width: 48,
-                      color: Colors.blueGrey,
-                      child: FadeInImage.memoryNetwork(
-                        placeholder: kTransparentImage,
-                        image: preparePlaceIcon(place),
-                        fit: BoxFit.cover,
+                    if (place.categories.isNotEmpty)
+                      Container(
+                        width: 48,
+                        color: Colors.blueGrey,
+                        child: FadeInImage.memoryNetwork(
+                          placeholder: kTransparentImage,
+                          image: preparePlaceIcon(place),
+                          fit: BoxFit.cover,
+                        ),
                       ),
-                    ),
                     const SizedBox(width: 10),
                     Expanded(
                       child: Column(
@@ -54,10 +55,11 @@ class ResultsAsList extends StatelessWidget {
                             style: const TextStyle(fontSize: 20),
                           ),
                           const SizedBox(height: 8),
-                          Text(
-                            place.categories.first.name,
-                            style: const TextStyle(fontSize: 17),
-                          ),
+                          if (place.categories.isNotEmpty)
+                            Text(
+                              place.categories.first.name,
+                              style: const TextStyle(fontSize: 17),
+                            ),
                         ],
                       ),
                     ),

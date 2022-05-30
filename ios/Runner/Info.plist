@@ -49,5 +49,10 @@
 	<string>Places needs to know your location to look for places</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Places needs to know your location to look for places</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+	<string>https</string>
+	<string>http</string>
+	</array>
 </dict>
 </plist>

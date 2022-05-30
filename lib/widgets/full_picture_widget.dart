@@ -24,7 +24,7 @@ class FullPictureWidget extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 40, left: 16),
+            padding: const EdgeInsets.only(top: 50, left: 4),
             child: IconButton(
               onPressed: () {
                 Navigator.of(context).pop();
